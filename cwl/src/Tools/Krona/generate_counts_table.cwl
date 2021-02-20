@@ -26,14 +26,14 @@ inputs:
 
 arguments:
   - "-o"
-  - $(inputs.assign_table.nameroot)_tax_counts.tsv
+  - $(inputs.assign_table.nameroot)_taxonomy_counts.tsv
 
 outputs:
   count_table:
     type: File
     format: edam:format_3475    
     outputBinding:
-      glob: "*_tax_counts.tsv"
+      glob: "*_counts.tsv"
 
 $namespaces:
  s: http://schema.org/

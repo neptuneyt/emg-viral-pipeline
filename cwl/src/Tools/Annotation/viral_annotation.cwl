@@ -37,7 +37,7 @@ outputs:
     type: File
     format: edam:format_3475
     outputBinding:
-      glob: "*_prot_ann_table.tsv"
+      glob: "*_annotation.tsv"
 
 $namespaces:
  edam: http://edamontology.org/
