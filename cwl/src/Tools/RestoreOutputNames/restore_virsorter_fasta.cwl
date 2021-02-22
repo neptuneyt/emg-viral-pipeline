@@ -2,44 +2,53 @@
 cwlVersion: v1.2
 class: CommandLineTool
 
-label: fasta chunker
-
-doc: split FASTA by number of records
+label: "Fasta rename utility"
 
 hints:
   DockerRequirement:
     dockerPull: "docker.io/microbiomeinformatics/emg-viral-pipeline-python3:v1"
 
 requirements:
+  InlineJavascriptRequirement: {}
   InitialWorkDirRequirement:
     listing:
       - class: File
-        location: ../../../../bin/fasta_chunker.py
+        location: ../../../../bin/restore_virsorter_fastas.py
 
-baseCommand: [ "python", "fasta_chunker.py" ]
+doc: |
+  Python script to rename VirSorter results fasta,
+  reversing the changes of fasta_rename in virify.
+
+baseCommand: ["python", "restore_virsorter_fastas.py"]
 
 inputs:
-  fasta_file:
+  input:
+    type: File
+    format: edam:format_1929
+    inputBinding:
+      prefix: "--input"
+  name_map:
     type: File
     inputBinding:
-      prefix: -i
-    format: edam:format_1929
-  chunk_size:
-    type: int
-    default: 1000
-    inputBinding:
-      prefix: -s
-  file_format:
-    type: string?
-    inputBinding:
-      prefix: -f
+      prefix: "--map"
+
+arguments:
+  - prefix: "--output"
+    valueFrom: |
+      ${
+        if (inputs.input && inputs.input.nameroot) {
+          return inputs.input.nameroot + ".fasta";
+        } else {
+          return "empty_map.tsv";
+        }
+      }
 
 outputs:
-  fasta_chunks:
-    format: edam:format_1929 # FASTA
-    type: File[]
+  restored_fasta:
+    type: File
+    format: edam:format_1929
     outputBinding:
-      glob: "*_*.faa"
+      glob: "*.fasta"
 
 $namespaces:
  edam: http://edamontology.org/

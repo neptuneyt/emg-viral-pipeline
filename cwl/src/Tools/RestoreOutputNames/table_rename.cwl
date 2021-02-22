@@ -2,44 +2,44 @@
 cwlVersion: v1.2
 class: CommandLineTool
 
-label: fasta chunker
-
-doc: split FASTA by number of records
+label: "Fasta rename utility"
 
 hints:
   DockerRequirement:
     dockerPull: "docker.io/microbiomeinformatics/emg-viral-pipeline-python3:v1"
 
 requirements:
+  InlineJavascriptRequirement: {}
   InitialWorkDirRequirement:
     listing:
       - class: File
-        location: ../../../../bin/fasta_chunker.py
+        location: ../../../../bin/rename_table_column.py
 
-baseCommand: [ "python", "fasta_chunker.py" ]
+doc: |
+  Small python script to rename a tsv/csv file column with a mapping file.
+
+baseCommand: ["python", "rename_table_column.py"]
 
 inputs:
-  fasta_file:
+  input:
     type: File
     inputBinding:
-      prefix: -i
-    format: edam:format_1929
-  chunk_size:
-    type: int
-    default: 1000
+      prefix: "--input"
+  map_file:
+    type: File
     inputBinding:
-      prefix: -s
-  file_format:
-    type: string?
+      prefix: "--map"
+  output:
+    type: string
     inputBinding:
-      prefix: -f
+      prefix: "--output"
 
 outputs:
-  fasta_chunks:
-    format: edam:format_1929 # FASTA
-    type: File[]
+  modified_table:
+    type: File
+    format: edam:format_1929
     outputBinding:
-      glob: "*_*.faa"
+      glob: $(inputs.output)
 
 $namespaces:
  edam: http://edamontology.org/
